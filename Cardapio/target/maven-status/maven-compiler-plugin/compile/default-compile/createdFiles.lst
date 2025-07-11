@@ -1,0 +1,11 @@
+Cardapio\IPagamento.class
+Cardapio\PagamentoCartao.class
+Cardapio\IAvaliacao.class
+Cardapio\Petisco.class
+Cardapio\Administrador.class
+Cardapio\SistemaCardapioBar.class
+Cardapio\Bebida.class
+Cardapio\Cliente.class
+Cardapio\PagamentoPix.class
+Cardapio\Usuario.class
+Cardapio\ProdutoMenu.class

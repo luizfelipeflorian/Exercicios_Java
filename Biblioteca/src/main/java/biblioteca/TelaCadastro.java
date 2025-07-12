@@ -1,11 +1,14 @@
 package biblioteca;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.util.LinkedList;
 
-class TelaCadastros extends JFrame {
+public class TelaCadastro extends JFrame {
+    LinkedList<Usuario> usuarios = new LinkedList<>();
+    LinkedList<Funcionario> funcionarios = new LinkedList<>();
+    LinkedList<Obra> obras = new LinkedList<>();
 
-    public TelaCadastros(ListaEncadeada<Usuario> usuarios, ListaEncadeada<Funcionario> funcionarios, ListaEncadeada<Obra> obras) {
+    public TelaCadastro(LinkedList<Usuario> usuarios, LinkedList<Funcionario> funcionarios, LinkedList<Obra> obras) {
         super("Cadastros");
         setSize(350, 250);
         setLocationRelativeTo(null);
@@ -26,19 +29,19 @@ class TelaCadastros extends JFrame {
         btnObra.addActionListener(e -> new TelaCadastroObra(obras));
         add(btnObra);
 
-        //teste //
-        funcionarios.adicionar(new Funcionario("1", "José"));
-        funcionarios.adicionar(new Funcionario("2", "Cláudia"));
-        usuarios.adicionar(new Aluno("12", "Ziul"));
-        usuarios.adicionar(new Aluno("5", "Ana"));
-        usuarios.adicionar(new Professor("2", "Luis Enrrique"));
-        usuarios.adicionar(new Professor("3", "Adriano"));
-        obras.adicionar(new Obra("1", "Titulo massa", "Fulano", 5, "Livro"));
-        obras.adicionar(new Obra("4", "Titulo massa vol-2", "Fulano", 5, "Livro"));
-        obras.adicionar(new Obra("2", "Titulo show", "Ciclano", 6, "Revista"));
-        obras.adicionar(new Obra("5", "Titulo show vol-2", "Ciclano", 6, "Revista"));
-        obras.adicionar(new Obra("3", "Titulo top", "Beutrano", 7, "DVD"));
-        obras.adicionar(new Obra("6", "Titulo top vol-2", "Beutrano", 7, "DVD"));
+        // teste //
+        funcionarios.add(new Funcionario("1", "José"));
+        funcionarios.add(new Funcionario("2", "Cláudia"));
+        usuarios.add(new Aluno("12", "Ziul"));
+        usuarios.add(new Aluno("5", "Ana"));
+        usuarios.add(new Professor("2", "Luis Enrrique"));
+        usuarios.add(new Professor("3", "Adriano"));
+        obras.add(new Obra("1", "Titulo massa", "Fulano", 5, "Livro"));
+        obras.add(new Obra("4", "Titulo massa vol-2", "Fulano", 5, "Livro"));
+        obras.add(new Obra("2", "Titulo show", "Ciclano", 6, "Revista"));
+        obras.add(new Obra("5", "Titulo show vol-2", "Ciclano", 6, "Revista"));
+        obras.add(new Obra("3", "Titulo top", "Beutrano", 7, "DVD"));
+        obras.add(new Obra("6", "Titulo top vol-2", "Beutrano", 7, "DVD"));
 
         setVisible(true);
     }
@@ -46,7 +49,7 @@ class TelaCadastros extends JFrame {
 
 class TelaCadastroFuncionario extends JFrame {
 
-    public TelaCadastroFuncionario(ListaEncadeada<Funcionario> funcionarios) {
+    public TelaCadastroFuncionario(LinkedList<Funcionario> funcionarios) {
         super("Cadastro de Funcionário");
         setSize(300, 200);
         setLocationRelativeTo(null);
@@ -72,7 +75,7 @@ class TelaCadastroFuncionario extends JFrame {
             if (txtId.getText().isEmpty() || txtNome.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
-                funcionarios.adicionar(new Funcionario(txtId.getText(), txtNome.getText()));
+                funcionarios.add(new Funcionario(txtId.getText(), txtNome.getText()));
                 JOptionPane.showMessageDialog(this, "Funcionário cadastrado!");
                 dispose();
             }
@@ -85,7 +88,7 @@ class TelaCadastroFuncionario extends JFrame {
 
 class TelaCadastroUsuario extends JFrame {
 
-    public TelaCadastroUsuario(ListaEncadeada<Usuario> usuarios) {
+    public TelaCadastroUsuario(LinkedList<Usuario> usuarios) {
         super("Cadastro de Usuário");
         setSize(300, 220);
         setLocationRelativeTo(null);
@@ -110,7 +113,7 @@ class TelaCadastroUsuario extends JFrame {
         lblTipo.setBounds(
                 20, 100, 60, 25);
         add(lblTipo);
-        JComboBox<String> cbTipo = new JComboBox<>(new String[]{"Aluno", "Professor"});
+        JComboBox<String> cbTipo = new JComboBox<>(new String[] { "Aluno", "Professor" });
 
         cbTipo.setBounds(
                 80, 100, 180, 25);
@@ -120,21 +123,19 @@ class TelaCadastroUsuario extends JFrame {
 
         btnSalvar.setBounds(
                 100, 150, 80, 30);
-        btnSalvar.addActionListener(e
-                -> {
+        btnSalvar.addActionListener(e -> {
             if (txtId.getText().isEmpty() || txtNome.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
                 if (cbTipo.getSelectedIndex() == 0) { // aqui posso adicionar um switch case para mais tipos de usuario
-                    usuarios.adicionar(new Aluno(txtId.getText(), txtNome.getText()));
+                    usuarios.add(new Aluno(txtId.getText(), txtNome.getText()));
                 } else {
-                    usuarios.adicionar(new Professor(txtId.getText(), txtNome.getText()));
+                    usuarios.add(new Professor(txtId.getText(), txtNome.getText()));
                 }
                 JOptionPane.showMessageDialog(this, "Usuário cadastrado!");
                 dispose();
             }
-        }
-        );
+        });
         add(btnSalvar);
 
         setVisible(true);
@@ -143,7 +144,7 @@ class TelaCadastroUsuario extends JFrame {
 
 class TelaCadastroObra extends JFrame {
 
-    public TelaCadastroObra(ListaEncadeada<Obra> obras) {
+    public TelaCadastroObra(LinkedList<Obra> obras) {
         super("Cadastro de Obra");
         setSize(320, 320);
         setLocationRelativeTo(null);
@@ -180,27 +181,30 @@ class TelaCadastroObra extends JFrame {
         JLabel lblTipo = new JLabel("Tipo:");
         lblTipo.setBounds(20, 180, 60, 25);
         add(lblTipo);
-        JComboBox<String> cbTipoO = new JComboBox<>(new String[]{"Livro", "Revista", "DVD"});
+        JComboBox<String> cbTipoO = new JComboBox<>(new String[] { "Livro", "Revista", "DVD" });
         cbTipoO.setBounds(80, 180, 180, 25);
         add(cbTipoO);
 
         JButton btnSalvar = new JButton("Salvar");
         btnSalvar.setBounds(200, 140, 80, 30);
         btnSalvar.addActionListener(e -> {
-            if (txtId.getText().isEmpty() || txtTitulo.getText().isEmpty() || txtAutor.getText().isEmpty() || txtQtd.getText().isEmpty()) {
+            if (txtId.getText().isEmpty() || txtTitulo.getText().isEmpty() || txtAutor.getText().isEmpty()
+                    || txtQtd.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
                     int qtd = Integer.parseInt(txtQtd.getText());
-                    obras.adicionar(new Obra(txtId.getText(), txtTitulo.getText(), txtAutor.getText(), qtd, cbTipoO.getName()));
+                    obras.add(
+                            new Obra(txtId.getText(), txtTitulo.getText(), txtAutor.getText(), qtd,
+                                    (String) cbTipoO.getSelectedItem()));
                     JOptionPane.showMessageDialog(this, "Obra cadastrada!");
                     dispose();
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Informe um número válido para exemplares.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Informe um número válido para exemplares.", "Erro",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
-        }
-        );
+        });
         add(btnSalvar);
 
         setVisible(true);

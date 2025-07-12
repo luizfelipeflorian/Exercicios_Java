@@ -1,13 +1,13 @@
 package biblioteca;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.util.LinkedList;
 
 public class TelaPrincipal extends JFrame {
 
-    ListaEncadeada<Funcionario> funcionarios = new ListaEncadeada<>();
-    ListaEncadeada<Usuario> usuarios = new ListaEncadeada<>();
-    ListaEncadeada<Obra> obras = new ListaEncadeada<>();
+    LinkedList<Funcionario> funcionarios = new LinkedList<>();
+    LinkedList<Usuario> usuarios = new LinkedList<>();
+    LinkedList<Obra> obras = new LinkedList<>();
 
     public TelaPrincipal() {
         super("Sistema de Biblioteca");
@@ -18,7 +18,7 @@ public class TelaPrincipal extends JFrame {
 
         JButton btnCadastros = new JButton("Cadastros");
         btnCadastros.setBounds(50, 30, 130, 30);
-        btnCadastros.addActionListener(e -> new TelaCadastros(usuarios, funcionarios, obras));
+        btnCadastros.addActionListener(e -> new TelaCadastro(usuarios, funcionarios, obras));
         add(btnCadastros);
 
         JButton btnConsultas = new JButton("Consultas");

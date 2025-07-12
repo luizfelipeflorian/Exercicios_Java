@@ -1,11 +1,11 @@
 package biblioteca;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.util.LinkedList;
 
 class TelaConsultas extends JFrame {
 
-    public TelaConsultas(ListaEncadeada<Usuario> usuarios, ListaEncadeada<Obra> obras) {
+    public TelaConsultas(LinkedList<Usuario> usuarios, LinkedList<Obra> obras) {
         super("Consultas");
         setSize(400, 300);
         setLocationRelativeTo(null);
@@ -15,13 +15,11 @@ class TelaConsultas extends JFrame {
         btnUsuarios.setBounds(50, 30, 280, 40);
         btnUsuarios.addActionListener(e -> {
             StringBuilder sb = new StringBuilder();
-            Node<Usuario> atual = usuarios.head;
             sb.append("ID | Nome | Situação dos emprestimo").append("\n");
-            while (atual != null) {
-                sb.append(atual.data).append("\n");
-                atual = atual.next;
+            for (Usuario usuario : usuarios) {
+                sb.append(usuario).append("\n");
             }
-            JOptionPane.showMessageDialog(this, sb.length() > 0 ? sb.toString() : "Nenhum Usuario cadastrado.");
+            JOptionPane.showMessageDialog(this, usuarios.size() > 0 ? sb.toString() : "Nenhum Usuario cadastrado.");
         });
         add(btnUsuarios);
 
@@ -29,13 +27,12 @@ class TelaConsultas extends JFrame {
         btnObras.setBounds(50, 100, 280, 40);
         btnObras.addActionListener(e -> {
             StringBuilder sb = new StringBuilder();
-            Node<Obra> atual = obras.head;
             sb.append("ID | Título | Autor | Tipo | Situação dos Exemplares").append("\n");
-            while (atual != null) {
-                sb.append(atual.data).append("\n");
-                atual = atual.next;
+            sb.append("ID | Título | Autor | Tipo | Situação dos Exemplares").append("\n");
+            for (Obra obra : obras) {
+                sb.append(obra).append("\n");
             }
-            JOptionPane.showMessageDialog(this, sb.length() > 0 ? sb.toString() : "Nenhuma obra cadastrada.");
+            JOptionPane.showMessageDialog(this, obras.size() > 0 ? sb.toString() : "Nenhuma obra cadastrada.");
         });
         add(btnObras);
 

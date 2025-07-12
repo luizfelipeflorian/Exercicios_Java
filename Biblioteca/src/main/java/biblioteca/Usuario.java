@@ -64,6 +64,7 @@ class Obra {
 
     @Override
     public String toString() {
-        return id +" - " + titulo + " - " + autor + " (" + tipo + ")" + " = " + exemplaresDisponiveis + "/" + totalExemplares;
+        return id + " - " + titulo + " - " + autor + " (" + tipo + ")" + " = " + exemplaresDisponiveis + "/"
+                + totalExemplares;
     }
 }

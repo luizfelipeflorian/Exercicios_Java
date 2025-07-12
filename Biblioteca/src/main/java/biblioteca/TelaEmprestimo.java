@@ -2,11 +2,11 @@ package biblioteca;
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
+import java.util.LinkedList;
 
 public class TelaEmprestimo extends JFrame {
 
-    public TelaEmprestimo(ListaEncadeada<Usuario> usuarios, ListaEncadeada<Funcionario> funcionarios, ListaEncadeada<Obra> obras) {
+    public TelaEmprestimo(LinkedList<Usuario> usuarios, LinkedList<Funcionario> funcionarios, LinkedList<Obra> obras) {
         super("Emprestimo");
         setSize(400, 300);
         setLocationRelativeTo(null);
@@ -16,10 +16,8 @@ public class TelaEmprestimo extends JFrame {
         btnUsuarios.setBounds(50, 30, 280, 40);
         btnUsuarios.addActionListener(e -> {
             StringBuilder sb = new StringBuilder();
-            Node<Usuario> atual = usuarios.head;
-            while (atual != null) {
-                sb.append(atual.data).append("\n");
-                atual = atual.next;
+            for (Usuario usuario : usuarios) {
+                sb.append(usuario).append("\n");
             }
             JOptionPane.showMessageDialog(this, sb.length() > 0 ? sb.toString() : "Nenhuma obra cadastrada.");
         });
@@ -36,7 +34,7 @@ public class TelaEmprestimo extends JFrame {
 
 class TelaCadastroEmprestimo extends JFrame {
 
-    public TelaCadastroEmprestimo(ListaEncadeada<Funcionario> funcionarios, ListaEncadeada<Usuario> usuarios, ListaEncadeada<Obra> obras) {
+    public TelaCadastroEmprestimo(LinkedList<Funcionario> funcionarios, LinkedList<Usuario> usuarios, LinkedList<Obra> obras) {
         super("Novo Emprestimo");
         setSize(600, 600);
         setLocationRelativeTo(null);
@@ -85,7 +83,7 @@ class TelaCadastroEmprestimo extends JFrame {
             if (txtId.getText().isEmpty() || txtQtd.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
-                funcionarios.adicionar(new Funcionario(txtId.getText(), txtQtd.getText()));
+                funcionarios.add(new Funcionario(txtId.getText(), txtQtd.getText()));
                 JOptionPane.showMessageDialog(this, "Funcionário cadastrado!");
                 dispose();
             }

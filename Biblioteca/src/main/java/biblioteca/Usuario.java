@@ -1,16 +1,16 @@
 package biblioteca;
 
-import javax.swing.JComboBox;
 
 abstract class Usuario {
 
-    String id, nome;
+    String id, nome, tipo;
     int limiteEmprestimos, emprestimosAtuais = 0;
 
-    Usuario(String id, String nome, int limite) {
+    Usuario(String id, String nome, int limite, String tipo) {
         this.id = id;
         this.nome = nome;
         this.limiteEmprestimos = limite;
+        this.tipo = tipo;
     }
 
     @Override
@@ -18,20 +18,36 @@ abstract class Usuario {
         return id + " - " + nome + " | " + emprestimosAtuais + "/" + limiteEmprestimos;
     }
 }
-
 class Aluno extends Usuario {
 
     Aluno(String id, String nome) {
-        super(id, nome, 3);
+        super(id, nome, 3, "Aluno");
+    }
+
+    public String getTipo() {
+        return this.tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
 
 class Professor extends Usuario {
 
     Professor(String id, String nome) {
-        super(id, nome, 5);
+        super(id, nome, 5, "Professor");
+    }
+
+    public String getTipo() {
+        return this.tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
+
 
 class Funcionario {
 

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.util.LinkedList;
 
 public class TelaCadastro extends JFrame {
+
     LinkedList<Usuario> usuarios = new LinkedList<>();
     LinkedList<Funcionario> funcionarios = new LinkedList<>();
     LinkedList<Obra> obras = new LinkedList<>();

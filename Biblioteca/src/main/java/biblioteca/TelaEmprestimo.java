@@ -56,7 +56,7 @@ public class TelaEmprestimo extends JFrame {
         this.obras = obras;
 
         JButton btnVisualizar = new JButton("Visualizar empréstimos");
-        btnVisualizar.setBounds(50, 80, 130, 30);
+        btnVisualizar.setBounds(50, 30, 280, 40);
         btnVisualizar.addActionListener(e -> {
             StringBuilder sb = new StringBuilder();
             for (Emprestimo emprestimo : emprestimos) {
@@ -67,7 +67,7 @@ public class TelaEmprestimo extends JFrame {
         add(btnVisualizar);
 
         JButton btnNovo = new JButton("Novo empréstimo");
-        btnNovo.setBounds(50, 120, 130, 30);
+        btnNovo.setBounds(50, 100, 280, 40);
         btnNovo.addActionListener(e -> new TelaCadastroEmprestimo(funcionarios, alunos, Professores, obras));
         add(btnNovo);
 
@@ -97,7 +97,7 @@ public class TelaEmprestimo extends JFrame {
                 LinkedList<Professor> Professores,
                 LinkedList<Obra> obras) {
             super("Novo Emprestimo");
-            setSize(600, 600);
+            setSize(380, 430);
             setLocationRelativeTo(null);
             setLayout(null);
 
@@ -125,13 +125,13 @@ public class TelaEmprestimo extends JFrame {
 
             // Funcionario Responsável
             JLabel lblResp = new JLabel("Funcionario Responsável:");
-            lblResp.setBounds(20, 140, 60, 25);
+            lblResp.setBounds(20, 140, 150, 25);
             add(lblResp);
             JComboBox<String> cbResp = new JComboBox<>();
             for (Funcionario funcionario : funcionarios) { // Adiciona os funcionários da linkedlist ao JComboBox
                 cbResp.addItem(funcionario.toString());
             }
-            cbResp.setBounds(80, 140, 180, 25);
+            cbResp.setBounds(170, 140, 180, 25);
             add(cbResp);
 
             // Tipo

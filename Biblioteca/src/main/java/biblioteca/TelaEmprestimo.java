@@ -2,6 +2,9 @@ package biblioteca;
 
 import javax.swing.*;
 import java.util.LinkedList;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class TelaEmprestimo extends JFrame {
 
@@ -18,20 +21,29 @@ public class TelaEmprestimo extends JFrame {
         Obra obra;
         int quantidade;
         String id, tipo;
+        Date dataEmprestimo;
+        Date dataDevolucao;
 
-        public Emprestimo(String id, String tipo, Usuario usuario, Funcionario funcionario, Obra obra, int quantidade) {
+        public Emprestimo(String id, String tipo, Usuario usuario, Funcionario funcionario, Obra obra, int quantidade,
+                Date dataEmprestimo, Date dataDevolucao) {
             this.id = id;
             this.tipo = tipo;
             this.usuario = usuario;
             this.funcionario = funcionario;
             this.obra = obra;
             this.quantidade = quantidade;
+            this.dataEmprestimo = dataEmprestimo;
+            this.dataDevolucao = dataDevolucao;
         }
 
         @Override
         public String toString() {
-            return id + " - " + "[" + tipo + "]" + " " + "[" + usuario + "]" + " Solicitou " + quantidade
-                    + " Exemplares de " + "[" + obra + "]" + " Autorizado por: " + funcionario;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String dataEmp = sdf.format(dataEmprestimo);
+            String dataDev = sdf.format(dataDevolucao);
+            return id + " - [" + tipo + "] [" + usuario + "] solicitou " + quantidade + " exemplares de [" + obra + "]"
+                    + " em " + dataEmp + ", devolução até " + dataDev
+                    + ". Autorizado por: " + funcionario;
         }
     }
 
@@ -97,31 +109,45 @@ public class TelaEmprestimo extends JFrame {
             txtId.setBounds(80, 20, 180, 25);
             add(txtId);
 
+            JLabel lblDataEmprestimo = new JLabel("Data Empréstimo (dd/MM/yyyy):");
+            lblDataEmprestimo.setBounds(20, 60, 180, 25);
+            add(lblDataEmprestimo);
+            JTextField txtDataEmprestimo = new JTextField();
+            txtDataEmprestimo.setBounds(200, 60, 100, 25);
+            add(txtDataEmprestimo);
+
+            JLabel lblDataDevolucao = new JLabel("Data Devolução (dd/MM/yyyy):");
+            lblDataDevolucao.setBounds(20, 100, 180, 25);
+            add(lblDataDevolucao);
+            JTextField txtDataDevolucao = new JTextField();
+            txtDataDevolucao.setBounds(200, 100, 100, 25);
+            add(txtDataDevolucao);
+
             // Funcionario Responsável
             JLabel lblResp = new JLabel("Funcionario Responsável:");
-            lblResp.setBounds(20, 60, 60, 25);
+            lblResp.setBounds(20, 140, 60, 25);
             add(lblResp);
             JComboBox<String> cbResp = new JComboBox<>();
             for (Funcionario funcionario : funcionarios) { // Adiciona os funcionários da linkedlist ao JComboBox
                 cbResp.addItem(funcionario.toString());
             }
-            cbResp.setBounds(80, 60, 180, 25);
+            cbResp.setBounds(80, 140, 180, 25);
             add(cbResp);
 
             // Tipo
             JLabel lblTipo = new JLabel("Tipo:");
-            lblTipo.setBounds(20, 100, 60, 25);
+            lblTipo.setBounds(20, 180, 60, 25);
             add(lblTipo);
             JComboBox<String> cbTipo = new JComboBox<>(new String[] { "Aluno", "Professor" });
-            cbTipo.setBounds(80, 100, 180, 25);
+            cbTipo.setBounds(80, 180, 180, 25);
             add(cbTipo);
 
             // Usuario
             JLabel lblUser = new JLabel("Usuario:");
-            lblUser.setBounds(20, 140, 60, 25);
+            lblUser.setBounds(20, 220, 60, 25);
             add(lblUser);
             JComboBox<String> cbUser = new JComboBox<>();
-            cbUser.setBounds(80, 140, 180, 25);
+            cbUser.setBounds(80, 220, 180, 25);
             add(cbUser);
 
             // Atualiza cbUser conforme cbTipo
@@ -145,25 +171,25 @@ public class TelaEmprestimo extends JFrame {
 
             // obra
             JLabel lblObra = new JLabel("Obra:");
-            lblObra.setBounds(20, 180, 60, 25);
+            lblObra.setBounds(20, 260, 60, 25);
             add(lblObra);
             JComboBox<String> cbObra = new JComboBox<>();
             for (Obra obra : obras) { // Adiciona as obras da linkedlist ao JComboBox
                 cbObra.addItem(obra.toString());
             }
-            cbObra.setBounds(80, 180, 180, 25);
+            cbObra.setBounds(80, 260, 180, 25);
             add(cbObra);
 
             // Quantidade
             JLabel lblQtd = new JLabel("QTD:");
-            lblQtd.setBounds(20, 220, 60, 25);
+            lblQtd.setBounds(20, 300, 60, 25);
             add(lblQtd);
             JTextField txtQtd = new JTextField();
-            txtQtd.setBounds(80, 220, 180, 25);
+            txtQtd.setBounds(80, 300, 180, 25);
             add(txtQtd);
 
             JButton btnSalvar = new JButton("Salvar");
-            btnSalvar.setBounds(100, 260, 80, 30);
+            btnSalvar.setBounds(100, 340, 80, 30);
             btnSalvar.addActionListener(e -> {
                 if (txtId.getText().isEmpty() || txtQtd.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -190,6 +216,18 @@ public class TelaEmprestimo extends JFrame {
                     return;
                 }
 
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Date dataEmprestimo;
+                Date dataDevolucao;
+                try {
+                    dataEmprestimo = sdf.parse(txtDataEmprestimo.getText());
+                    dataDevolucao = sdf.parse(txtDataDevolucao.getText());
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(this, "Formato de data inválido! Use dd/MM/yyyy.", "Erro",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 // Verifica se há exemplares suficientes na obra
                 if (obra.exemplaresDisponiveis < quantidade) {
                     JOptionPane.showMessageDialog(this, "Não há exemplares suficientes disponíveis.", "Erro",
@@ -208,7 +246,9 @@ public class TelaEmprestimo extends JFrame {
                 // Atualiza os dados
                 obra.exemplaresDisponiveis -= quantidade;
 
-                emprestimos.add(new Emprestimo(id, tipo, usuario, funcionario, obra, quantidade));
+                emprestimos.add(new Emprestimo(id, tipo, usuario, funcionario, obra, quantidade, dataEmprestimo,
+                        dataDevolucao));
+
                 JOptionPane.showMessageDialog(this, "Empréstimo cadastrado!");
                 dispose();
             });

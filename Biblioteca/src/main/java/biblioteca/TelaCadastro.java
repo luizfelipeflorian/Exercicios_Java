@@ -5,11 +5,12 @@ import java.util.LinkedList;
 
 public class TelaCadastro extends JFrame {
 
-    LinkedList<Usuario> usuarios = new LinkedList<>();
+    LinkedList<Aluno> alunos = new LinkedList<>();
+    LinkedList<Professor> Professores = new LinkedList<>();
     LinkedList<Funcionario> funcionarios = new LinkedList<>();
     LinkedList<Obra> obras = new LinkedList<>();
 
-    public TelaCadastro(LinkedList<Usuario> usuarios, LinkedList<Funcionario> funcionarios, LinkedList<Obra> obras) {
+    public TelaCadastro(LinkedList<Aluno> alunos, LinkedList<Professor> professores, LinkedList<Funcionario> funcionarios, LinkedList<Obra> obras) {
         super("Cadastros");
         setSize(350, 250);
         setLocationRelativeTo(null);
@@ -22,7 +23,7 @@ public class TelaCadastro extends JFrame {
 
         JButton btnUsuario = new JButton("Cadastrar Usuário");
         btnUsuario.setBounds(50, 80, 220, 30);
-        btnUsuario.addActionListener(e -> new TelaCadastroUsuario(usuarios));
+        btnUsuario.addActionListener(e -> new TelaCadastroUsuario(alunos, professores));
         add(btnUsuario);
 
         JButton btnObra = new JButton("Cadastrar Obra");
@@ -33,10 +34,10 @@ public class TelaCadastro extends JFrame {
         // teste //
         funcionarios.add(new Funcionario("1", "José"));
         funcionarios.add(new Funcionario("2", "Cláudia"));
-        usuarios.add(new Aluno("12", "Ziul"));
-        usuarios.add(new Aluno("5", "Ana"));
-        usuarios.add(new Professor("2", "Luis Enrrique"));
-        usuarios.add(new Professor("3", "Adriano"));
+        alunos.add(new Aluno("12", "Ziul"));
+        alunos.add(new Aluno("5", "Ana"));
+        professores.add(new Professor("2", "Luis Enrrique"));
+        professores.add(new Professor("3", "Adriano"));
         obras.add(new Obra("1", "Titulo massa", "Fulano", 5, "Livro"));
         obras.add(new Obra("4", "Titulo massa vol-2", "Fulano", 5, "Livro"));
         obras.add(new Obra("2", "Titulo show", "Ciclano", 6, "Revista"));
@@ -89,7 +90,7 @@ class TelaCadastroFuncionario extends JFrame {
 
 class TelaCadastroUsuario extends JFrame {
 
-    public TelaCadastroUsuario(LinkedList<Usuario> usuarios) {
+    public TelaCadastroUsuario(LinkedList<Aluno> alunos, LinkedList<Professor> professores) {
         super("Cadastro de Usuário");
         setSize(300, 220);
         setLocationRelativeTo(null);
@@ -111,27 +112,24 @@ class TelaCadastroUsuario extends JFrame {
 
         JLabel lblTipo = new JLabel("Tipo:");
 
-        lblTipo.setBounds(
-                20, 100, 60, 25);
+        lblTipo.setBounds(20, 100, 60, 25);
         add(lblTipo);
         JComboBox<String> cbTipo = new JComboBox<>(new String[] { "Aluno", "Professor" });
 
-        cbTipo.setBounds(
-                80, 100, 180, 25);
+        cbTipo.setBounds(80, 100, 180, 25);
         add(cbTipo);
 
         JButton btnSalvar = new JButton("Salvar");
 
-        btnSalvar.setBounds(
-                100, 150, 80, 30);
+        btnSalvar.setBounds(100, 150, 80, 30);
         btnSalvar.addActionListener(e -> {
             if (txtId.getText().isEmpty() || txtNome.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
                 if (cbTipo.getSelectedIndex() == 0) { // aqui posso adicionar um switch case para mais tipos de usuario
-                    usuarios.add(new Aluno(txtId.getText(), txtNome.getText()));
+                    alunos.add(new Aluno(txtId.getText(), txtNome.getText()));
                 } else {
-                    usuarios.add(new Professor(txtId.getText(), txtNome.getText()));
+                    professores.add(new Professor(txtId.getText(), txtNome.getText()));
                 }
                 JOptionPane.showMessageDialog(this, "Usuário cadastrado!");
                 dispose();

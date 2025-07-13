@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 class TelaConsultas extends JFrame {
 
-    public TelaConsultas(LinkedList<Usuario> usuarios, LinkedList<Obra> obras) {
+    public TelaConsultas(LinkedList<Aluno> alunos, LinkedList<Professor> professores, LinkedList<Obra> obras) {
         super("Consultas");
         setSize(400, 300);
         setLocationRelativeTo(null);
@@ -16,6 +16,9 @@ class TelaConsultas extends JFrame {
         btnUsuarios.addActionListener(e -> {
             StringBuilder sb = new StringBuilder();
             sb.append("ID | Nome | Situação dos emprestimo").append("\n");
+            LinkedList<Usuario> usuarios = new LinkedList<>();
+            usuarios.addAll(alunos);
+            usuarios.addAll(professores);
             for (Usuario usuario : usuarios) {
                 sb.append(usuario).append("\n");
             }
@@ -27,7 +30,6 @@ class TelaConsultas extends JFrame {
         btnObras.setBounds(50, 100, 280, 40);
         btnObras.addActionListener(e -> {
             StringBuilder sb = new StringBuilder();
-            sb.append("ID | Título | Autor | Tipo | Situação dos Exemplares").append("\n");
             sb.append("ID | Título | Autor | Tipo | Situação dos Exemplares").append("\n");
             for (Obra obra : obras) {
                 sb.append(obra).append("\n");

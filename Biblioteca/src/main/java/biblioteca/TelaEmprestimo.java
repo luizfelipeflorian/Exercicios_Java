@@ -166,33 +166,53 @@ public class TelaEmprestimo extends JFrame {
             btnSalvar.setBounds(100, 260, 80, 30);
             btnSalvar.addActionListener(e -> {
                 if (txtId.getText().isEmpty() || txtQtd.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro",
-                            JOptionPane.ERROR_MESSAGE);
-                } else {
-                    String id = txtId.getText();
-                    String tipo;
-                    Usuario usuario;
-                    if (cbTipo.getSelectedItem().equals("Aluno")) {
-                        tipo = "Aluno";
-                        usuario = alunos.get(cbUser.getSelectedIndex());
-                    } else {
-                        tipo = "Professor";
-                        usuario = Professores.get(cbUser.getSelectedIndex());
-                    }
-                    Funcionario funcionario = funcionarios.get(cbResp.getSelectedIndex());
-                    Obra obra = obras.get(cbObra.getSelectedIndex());
-                    int quantidade;
-                    try {
-                        quantidade = Integer.parseInt(txtQtd.getText());
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(this, "Quantidade inválida!", "Erro", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    emprestimos.add(new Emprestimo(id, tipo, usuario, funcionario, obra, quantidade));
-                    JOptionPane.showMessageDialog(this, "Empréstimo cadastrado!");
-                    dispose();
+                    JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
+                String id = txtId.getText();
+                String tipo;
+                Usuario usuario;
+                if (cbTipo.getSelectedItem().equals("Aluno")) {
+                    tipo = "Aluno";
+                    usuario = alunos.get(cbUser.getSelectedIndex());
+                } else {
+                    tipo = "Professor";
+                    usuario = Professores.get(cbUser.getSelectedIndex());
+                }
+                Funcionario funcionario = funcionarios.get(cbResp.getSelectedIndex());
+                Obra obra = obras.get(cbObra.getSelectedIndex());
+                int quantidade;
+                try {
+                    quantidade = Integer.parseInt(txtQtd.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Quantidade inválida!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Verifica se há exemplares suficientes na obra
+                if (obra.exemplaresDisponiveis < quantidade) {
+                    JOptionPane.showMessageDialog(this, "Não há exemplares suficientes disponíveis.", "Erro",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Verifica se o usuário pode pegar essa quantidade (limite de empréstimos)
+                if (!usuario.podeEmprestar(quantidade)) {
+                    JOptionPane.showMessageDialog(this, "Usuário atingiu o limite de empréstimos permitidos.", "Erro",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                usuario.emprestar(quantidade);
+
+                // Atualiza os dados
+                obra.exemplaresDisponiveis -= quantidade;
+
+                emprestimos.add(new Emprestimo(id, tipo, usuario, funcionario, obra, quantidade));
+                JOptionPane.showMessageDialog(this, "Empréstimo cadastrado!");
+                dispose();
             });
+
             add(btnSalvar);
 
             setVisible(true);

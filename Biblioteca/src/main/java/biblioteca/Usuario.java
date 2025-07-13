@@ -1,6 +1,5 @@
 package biblioteca;
 
-
 abstract class Usuario {
 
     String id, nome, tipo;
@@ -13,11 +12,20 @@ abstract class Usuario {
         this.tipo = tipo;
     }
 
+    public boolean podeEmprestar(int qtd) {
+        return (emprestimosAtuais + qtd) <= limiteEmprestimos;
+    }
+
+    public void emprestar(int qtd) {
+        emprestimosAtuais += qtd;
+    }
+
     @Override
     public String toString() {
         return id + " - " + nome + " | " + emprestimosAtuais + "/" + limiteEmprestimos;
     }
 }
+
 class Aluno extends Usuario {
 
     Aluno(String id, String nome) {
@@ -48,7 +56,6 @@ class Professor extends Usuario {
     }
 }
 
-
 class Funcionario {
 
     String id, nome;
@@ -76,6 +83,14 @@ class Obra {
         this.totalExemplares = qtd;
         this.exemplaresDisponiveis = qtd;
         this.tipo = tipo;
+    }
+
+    public boolean emprestar(int quantidade) {
+        if (this.exemplaresDisponiveis >= quantidade) {
+            this.exemplaresDisponiveis -= quantidade;
+            return true;
+        }
+        return false;
     }
 
     @Override

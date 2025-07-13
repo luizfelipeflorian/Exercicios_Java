@@ -175,7 +175,7 @@ public class TelaEmprestimo extends JFrame {
             add(lblObra);
             JComboBox<String> cbObra = new JComboBox<>();
             for (Obra obra : obras) { // Adiciona as obras da linkedlist ao JComboBox
-                cbObra.addItem(obra.toString());
+                cbObra.addItem(obra.id + " - " + obra.titulo + " - " + obra.autor);
             }
             cbObra.setBounds(80, 260, 180, 25);
             add(cbObra);

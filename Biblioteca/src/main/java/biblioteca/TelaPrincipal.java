@@ -1,6 +1,7 @@
 package biblioteca;
 
 import javax.swing.*;
+import biblioteca.TelaEmprestimo.Emprestimo;
 import java.util.LinkedList;
 
 public class TelaPrincipal extends JFrame {
@@ -9,6 +10,7 @@ public class TelaPrincipal extends JFrame {
     LinkedList<Aluno> alunos = new LinkedList<>();
     LinkedList<Professor> professores = new LinkedList<>();
     LinkedList<Obra> obras = new LinkedList<>();
+    LinkedList<Emprestimo> emprestimos = new LinkedList<>();
 
     public TelaPrincipal() {
         super("Sistema de Biblioteca");
@@ -29,12 +31,14 @@ public class TelaPrincipal extends JFrame {
 
         JButton btnEmprestimos = new JButton("Empréstimos");
         btnEmprestimos.setBounds(50, 80, 130, 30);
-        btnEmprestimos.addActionListener(e -> new TelaEmprestimo(alunos, professores, funcionarios, obras)); // sustituir por new Tela"DeAlgumaCoisa"(parametros) quando criar a nova java class
+        btnEmprestimos.addActionListener(e -> new TelaEmprestimo(alunos, professores, funcionarios, obras, emprestimos));
         add(btnEmprestimos);
 
         JButton btnDevolucoes = new JButton("Devoluções");
         btnDevolucoes.setBounds(200, 80, 130, 30);
-        btnDevolucoes.addActionListener(e -> JOptionPane.showMessageDialog(this, "Tela de Devoluções")); // sustituir por new Tela"De AlgumaCoisa"(parametros) quando criar a nova java class
+        btnDevolucoes.addActionListener(e -> new TelaDevolucao(emprestimos)); // sustituir por new Tela"De
+                                                                              // AlgumaCoisa"(parametros) quando criar a
+                                                                              // nova java class
         add(btnDevolucoes);
 
         JButton btnRelatorios = new JButton("Relatórios");

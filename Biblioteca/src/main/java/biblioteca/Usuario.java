@@ -20,6 +20,10 @@ abstract class Usuario {
         emprestimosAtuais += qtd;
     }
 
+    public void devolver(int qtd) {
+        emprestimosAtuais -= qtd;
+    }
+
     @Override
     public String toString() {
         return id + " - " + nome + " | " + emprestimosAtuais + "/" + limiteEmprestimos;
@@ -91,6 +95,10 @@ class Obra {
             return true;
         }
         return false;
+    }
+
+    public void devolver(int quantidade) {
+        this.exemplaresDisponiveis += quantidade;
     }
 
     @Override

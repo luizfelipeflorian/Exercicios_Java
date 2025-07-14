@@ -8,10 +8,9 @@ import java.text.SimpleDateFormat;
 
 public class TelaEmprestimo extends JFrame {
 
-    LinkedList<Emprestimo> emprestimos = new LinkedList<>();
-
+    LinkedList<Emprestimo> emprestimos;
     LinkedList<Aluno> alunos;
-    LinkedList<Professor> Professores;
+    LinkedList<Professor> professores;
     LinkedList<Funcionario> funcionarios;
     LinkedList<Obra> obras;
 
@@ -23,9 +22,10 @@ public class TelaEmprestimo extends JFrame {
         String id, tipo;
         Date dataEmprestimo;
         Date dataDevolucao;
+        Boolean confirmacao;
 
         public Emprestimo(String id, String tipo, Usuario usuario, Funcionario funcionario, Obra obra, int quantidade,
-                Date dataEmprestimo, Date dataDevolucao) {
+                Date dataEmprestimo, Date dataDevolucao, Boolean confirmacao) {
             this.id = id;
             this.tipo = tipo;
             this.usuario = usuario;
@@ -34,6 +34,7 @@ public class TelaEmprestimo extends JFrame {
             this.quantidade = quantidade;
             this.dataEmprestimo = dataEmprestimo;
             this.dataDevolucao = dataDevolucao;
+            this.confirmacao = confirmacao;
         }
 
         @Override
@@ -45,15 +46,55 @@ public class TelaEmprestimo extends JFrame {
                     + " em " + dataEmp + ", devolução até " + dataDev
                     + ". Autorizado por: " + funcionario;
         }
+
+        public boolean isDevolvido() {
+            return confirmacao != null && confirmacao;
+        }
+
+        public void registrarDevolucao(int quantidade) {
+            if (quantidade <= 0)
+                return;
+
+            this.confirmacao = true;
+            obra.devolver(quantidade);
+            usuario.devolver(quantidade);
+
+            if (usuario.emprestimosAtuais < 0) {
+                usuario.emprestimosAtuais = 0;
+            }
+        }
     }
 
-    public TelaEmprestimo(LinkedList<Aluno> alunos, LinkedList<Professor> Professores,
-            LinkedList<Funcionario> funcionarios, LinkedList<Obra> obras) {
+    public TelaEmprestimo(LinkedList<Aluno> alunos, LinkedList<Professor> professores,
+            LinkedList<Funcionario> funcionarios, LinkedList<Obra> obras,
+            LinkedList<Emprestimo> emprestimos) {
 
         this.alunos = alunos;
-        this.Professores = Professores;
+        this.professores = professores;
         this.funcionarios = funcionarios;
         this.obras = obras;
+        this.emprestimos = emprestimos;
+        this.alunos = alunos;
+
+        //teste
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            emprestimos.add(new Emprestimo("1", "Aluno", alunos.get(0), funcionarios.get(0), obras.get(0), 1,
+                    sdf.parse("10/10/2025"), sdf.parse("15/10/2025"), false));
+            emprestimos.add(new Emprestimo("2", "Professor", professores.get(0), funcionarios.get(1), obras.get(1), 2,
+                    sdf.parse("20/10/2025"), sdf.parse("25/10/2025"), false));
+            emprestimos.add(new Emprestimo("3", "Aluno", alunos.get(1), funcionarios.get(1), obras.get(2), 1,
+                    sdf.parse("30/10/2025"), sdf.parse("05/11/2025"), false));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        setTitle("Tela de Empréstimo");
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLayout(null);
+        setVisible(true);
 
         JButton btnVisualizar = new JButton("Visualizar empréstimos");
         btnVisualizar.setBounds(50, 30, 280, 40);
@@ -68,35 +109,18 @@ public class TelaEmprestimo extends JFrame {
 
         JButton btnNovo = new JButton("Novo empréstimo");
         btnNovo.setBounds(50, 100, 280, 40);
-        btnNovo.addActionListener(e -> new TelaCadastroEmprestimo(funcionarios, alunos, Professores, obras));
+        btnNovo.addActionListener(
+                e -> new TelaCadastroEmprestimo(funcionarios, alunos, professores, obras, emprestimos));
         add(btnNovo);
-
-        setTitle("Tela de Empréstimo");
-        setSize(400, 300);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLayout(null);
-        setVisible(true);
-    }
-
-    class VisualizarEmprestimo extends JFrame {
-        public VisualizarEmprestimo(LinkedList<Aluno> alunos, LinkedList<Professor> Professores,
-                LinkedList<Funcionario> funcionarios,
-                LinkedList<Obra> obras) {
-            super("Emprestimos");
-            setSize(400, 300);
-            setLocationRelativeTo(null);
-            setLayout(null);
-
-            setVisible(true);
-        }
     }
 
     class TelaCadastroEmprestimo extends JFrame {
+        LinkedList<Emprestimo> emprestimos;
+
         public TelaCadastroEmprestimo(LinkedList<Funcionario> funcionarios, LinkedList<Aluno> alunos,
-                LinkedList<Professor> Professores,
-                LinkedList<Obra> obras) {
-            super("Novo Emprestimo");
+                LinkedList<Professor> Professores, LinkedList<Obra> obras,
+                LinkedList<Emprestimo> emprestimos) {
+            this.emprestimos = emprestimos;
             setSize(380, 430);
             setLocationRelativeTo(null);
             setLayout(null);
@@ -247,7 +271,7 @@ public class TelaEmprestimo extends JFrame {
                 obra.exemplaresDisponiveis -= quantidade;
 
                 emprestimos.add(new Emprestimo(id, tipo, usuario, funcionario, obra, quantidade, dataEmprestimo,
-                        dataDevolucao));
+                        dataDevolucao, false));
 
                 JOptionPane.showMessageDialog(this, "Empréstimo cadastrado!");
                 dispose();

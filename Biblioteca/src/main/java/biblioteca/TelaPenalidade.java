@@ -7,10 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
-/**
- * Classe que representa uma penalidade aplicada a um usuário.
- */
-class Penalidade {
+//Classe que representa uma penalidade aplicada a um usuário.
+Class Penalidade {
 
     enum Tipo {
         MULTA, SUSPENSAO
@@ -83,9 +81,7 @@ class Penalidade {
     }
 }
 
-/**
- * Tela para gerenciamento de penalidades.
- */
+// Tela para gerenciamento de penalidades
 public class TelaPenalidade extends JFrame {
 
     private LinkedList<Funcionario> funcionarios;
@@ -253,10 +249,7 @@ public class TelaPenalidade extends JFrame {
         }
     }
 
-    /**
-     * Método para verificar se um usuário está bloqueado por penalidade ativa.
-     * Pode ser usado para validar empréstimos (RN05, RN07).
-     */
+    // Método para verificar se um usuário está bloqueado por penalidade ativa.
     public boolean usuarioEstaBloqueado(Usuario usuario) {
         for (Penalidade p : penalidades) {
             if (p.getUsuario().equals(usuario) && p.isAtiva() && p.getTipo() == Penalidade.Tipo.SUSPENSAO) {
@@ -266,10 +259,7 @@ public class TelaPenalidade extends JFrame {
         return false;
     }
 
-    /**
-     * Método para calcular multa total ativa de um usuário.
-     * Pode ser usado para exibir pendências financeiras.
-     */
+    // Método para calcular multa total ativa de um usuário.
     public double multaAtivaTotal(Usuario usuario) {
         double total = 0;
         for (Penalidade p : penalidades) {

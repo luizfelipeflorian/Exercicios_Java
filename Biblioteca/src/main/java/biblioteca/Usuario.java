@@ -25,7 +25,7 @@ abstract class Usuario {
     /**
      * Verifica se o usuário pode realizar um empréstimo de determinada quantidade.
      * Considera se o usuário está ativo e se não ultrapassa o limite de
-     * empréstimos.
+     * empréstimos
      */
     public boolean podeEmprestar(int qtd) {
         return ativo && (emprestimosAtuais + qtd) <= limiteEmprestimos;

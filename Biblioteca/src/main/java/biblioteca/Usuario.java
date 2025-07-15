@@ -1,23 +1,19 @@
 package biblioteca;
 
-/**
- * Enum para tipos de usuário no sistema.
- */
+// Enum para tipos de usuário no sistema.
 enum TipoUsuario {
     ALUNO, PROFESSOR;
 }
 
-/**
- * Classe abstrata que representa um usuário da biblioteca.
- */
+// Classe abstrata que representa um usuário da biblioteca.
 abstract class Usuario {
 
     private String id;
     private String nome;
-    private TipoUsuario tipo;
+    private TipoUsuario tipo; // enum para diferenciar aluno e professor
     private int limiteEmprestimos;
     private int emprestimosAtuais = 0;
-    private boolean ativo = true; // Indica se o usuário está habilitado para empréstimos
+    private boolean ativo = true; // Está habilitado para empréstimos?
 
     public Usuario(String id, String nome, int limite, TipoUsuario tipo) {
         this.id = id;
@@ -35,16 +31,12 @@ abstract class Usuario {
         return ativo && (emprestimosAtuais + qtd) <= limiteEmprestimos;
     }
 
-    /**
-     * Registra um empréstimo para o usuário.
-     */
+    // Registra um empréstimo para o usuário.
     public void emprestar(int qtd) {
         emprestimosAtuais += qtd;
     }
 
-    /**
-     * Registra uma devolução para o usuário.
-     */
+    // Registra uma devolução para o usuário.
     public void devolver(int qtd) {
         emprestimosAtuais -= qtd;
         if (emprestimosAtuais < 0) {
@@ -53,7 +45,6 @@ abstract class Usuario {
     }
 
     // Getters e setters
-
     public String getId() {
         return id;
     }
@@ -75,7 +66,7 @@ abstract class Usuario {
     }
 
     public void setEmprestimosAtuais(int emprestimosAtuais) {
-        this.emprestimosAtuais = Math.max(emprestimosAtuais, 0);
+        this.emprestimosAtuais = Math.max(emprestimosAtuais, 0); // Garante que não fique negativo
     }
 
     public boolean isAtivo() {
@@ -102,7 +93,7 @@ abstract class Usuario {
             return true;
         if (!(obj instanceof Usuario))
             return false;
-        Usuario other = (Usuario) obj;
+        Usuario other = (Usuario) obj; // Conversão para poder acessar seus métodos e atributos.
         return id != null && id.equals(other.getId());
     }
 
@@ -197,11 +188,7 @@ class Obra {
         this.tipo = tipo;
     }
 
-    /**
-     * Tenta emprestar a quantidade solicitada de exemplares.
-     * 
-     * @return true se possível, false caso contrário.
-     */
+    // Tenta emprestar a quantidade solicitada de exemplares.
     public boolean emprestar(int quantidade) {
         if (this.exemplaresDisponiveis >= quantidade) {
             this.exemplaresDisponiveis -= quantidade;
@@ -210,9 +197,7 @@ class Obra {
         return false;
     }
 
-    /**
-     * Registra a devolução de exemplares.
-     */
+    // Registra a devolução de exemplares.
     public void devolver(int quantidade) {
         this.exemplaresDisponiveis += quantidade;
         if (this.exemplaresDisponiveis > totalExemplares) {
@@ -221,7 +206,6 @@ class Obra {
     }
 
     // Getters e setters
-
     public String getId() {
         return id;
     }

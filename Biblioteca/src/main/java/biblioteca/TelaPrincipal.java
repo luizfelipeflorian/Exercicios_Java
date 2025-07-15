@@ -2,7 +2,6 @@ package biblioteca;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.LinkedList;
 
 public class TelaPrincipal extends JFrame {
@@ -26,12 +25,13 @@ public class TelaPrincipal extends JFrame {
         inicializarDadosTeste();
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 15, 10, 15);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1;
+        gbc.insets = new Insets(10, 15, 10, 15); // Define um espaço (margem ou gap) em volta do componente.
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Preenche horizontalmente
+        gbc.weightx = 1; 
 
-        // Botão Cadastros
+        // Cadastros
         JButton btnCadastros = new JButton("Cadastros");
+        // Define a posição do botão na grade
         gbc.gridx = 0;
         gbc.gridy = 0;
         btnCadastros.addActionListener(e -> {
@@ -41,28 +41,29 @@ public class TelaPrincipal extends JFrame {
         });
         add(btnCadastros, gbc);
 
-        // Botão Consultas
+        // Consultas
         JButton btnConsultas = new JButton("Consultas");
         gbc.gridx = 1;
         gbc.gridy = 0;
         btnConsultas.addActionListener(e -> new TelaConsultas(alunos, professores, obras));
         add(btnConsultas, gbc);
 
-        // Botão Empréstimos
+        // Empréstimos
         JButton btnEmprestimos = new JButton("Empréstimos");
         gbc.gridx = 0;
         gbc.gridy = 1;
-        btnEmprestimos.addActionListener(e -> new TelaEmprestimo(alunos, professores, funcionarios, obras, emprestimos, penalidades));
+        btnEmprestimos.addActionListener(
+                e -> new TelaEmprestimo(alunos, professores, funcionarios, obras, emprestimos, penalidades));
         add(btnEmprestimos, gbc);
 
-        // Botão Devoluções
+        // Devoluções
         JButton btnDevolucoes = new JButton("Devoluções");
         gbc.gridx = 1;
         gbc.gridy = 1;
         btnDevolucoes.addActionListener(e -> new TelaDevolucao(emprestimos, penalidades));
         add(btnDevolucoes, gbc);
 
-        // Botão Relatórios
+        // Relatórios
         JButton btnRelatorios = new JButton("Relatórios");
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -73,20 +74,18 @@ public class TelaPrincipal extends JFrame {
         });
         add(btnRelatorios, gbc);
 
-        // Botão Penalidades
+        // Penalidades
         JButton btnPenalidades = new JButton("Penalidades");
         gbc.gridx = 1;
         gbc.gridy = 2;
         btnPenalidades.addActionListener(e -> {
             if (verificarAcesso()) {
-                // TelaPenalidade ainda não implementada, placeholder
-                JOptionPane.showMessageDialog(this, "Tela de Penalidades ainda não implementada.");
-                // Futuramente: new TelaPenalidade(funcionarios, alunos, professores, obras, emprestimos);
+                new TelaPenalidade(funcionarios, alunos, professores, obras, emprestimos);
             }
         });
         add(btnPenalidades, gbc);
 
-        // Botão Login/Logout para simular controle de acesso
+        // Botão Login/Logout para controle de acesso
         JButton btnLoginLogout = new JButton("Login");
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -109,13 +108,17 @@ public class TelaPrincipal extends JFrame {
     }
 
     private void inicializarDadosTeste() {
-        // Dados de teste para facilitar uso inicial
+        // Dados de teste
         funcionarios.add(new Funcionario("1", "José"));
         funcionarios.add(new Funcionario("2", "Cláudia"));
-        alunos.add(new Aluno("12", "Ziul"));
-        alunos.add(new Aluno("5", "Ana"));
-        professores.add(new Professor("2", "Luis Enrrique"));
-        professores.add(new Professor("3", "Adriano"));
+        alunos.add(new Aluno("1", "Ana"));
+        alunos.add(new Aluno("2", "Bruno"));
+        alunos.add(new Aluno("3", "Claudio"));
+        alunos.add(new Aluno("4", "Diana"));
+        alunos.add(new Aluno("5", "Eduardo"));
+        professores.add(new Professor("1", "Fabio"));
+        professores.add(new Professor("2", "Gustavo"));
+        professores.add(new Professor("3", "Helena"));
         obras.add(new Obra("1", "Titulo massa", "Fulano", 5, "Livro"));
         obras.add(new Obra("4", "Titulo massa vol-2", "Fulano", 5, "Livro"));
         obras.add(new Obra("2", "Titulo show", "Ciclano", 6, "Revista"));
@@ -124,10 +127,7 @@ public class TelaPrincipal extends JFrame {
         obras.add(new Obra("6", "Titulo top vol-2", "Beutrano", 7, "DVD"));
     }
 
-    /**
-     * Simula um login simples para controle de acesso.
-     * Apenas funcionários podem acessar telas administrativas.
-     */
+    // Login para controle de acesso. Apenas funcionários. (Simulação)
     private void realizarLogin() {
         String id = JOptionPane.showInputDialog(this, "Informe o ID do funcionário para login:");
         if (id == null || id.trim().isEmpty()) {
@@ -143,9 +143,7 @@ public class TelaPrincipal extends JFrame {
         JOptionPane.showMessageDialog(this, "Funcionário não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
     }
 
-    /**
-     * Verifica se há usuário logado para acesso às telas administrativas.
-     */
+    // Verifica se há usuário logado para acesso às telas administrativas.
     private boolean verificarAcesso() {
         if (usuarioLogado == null) {
             JOptionPane.showMessageDialog(this,

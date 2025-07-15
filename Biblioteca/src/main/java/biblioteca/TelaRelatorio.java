@@ -1,7 +1,6 @@
 package biblioteca;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,14 +48,14 @@ public class TelaRelatorio extends JFrame {
         setVisible(true);
     }
 
-    // Relatório 1: Livros mais emprestados
+    // Livros mais emprestados
     private void mostrarLivrosMaisEmprestados() {
         if (emprestimos.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Nenhum empréstimo registrado.", "Relatório", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        // Contar quantidade total emprestada por obra
+        // Conta a quantidade total emprestada por obra
         Map<String, Integer> contagem = new HashMap<>();
         for (TelaEmprestimo.Emprestimo e : emprestimos) {
             String obraId = e.obra.getId();

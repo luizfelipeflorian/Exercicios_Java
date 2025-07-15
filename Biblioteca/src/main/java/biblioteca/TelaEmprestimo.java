@@ -13,6 +13,9 @@ public class TelaEmprestimo extends JFrame {
     LinkedList<Professor> professores;
     LinkedList<Funcionario> funcionarios;
     LinkedList<Obra> obras;
+    LinkedList<Penalidade> penalidades; // nova lista para controle de penalidades
+
+    private TelaPenalidade controlePenalidades;
 
     public class Emprestimo {
         Usuario usuario;
@@ -59,7 +62,7 @@ public class TelaEmprestimo extends JFrame {
             obra.devolver(quantidade);
             usuario.devolver(quantidade);
 
-            if (usuario.emprestimosAtuais < 0) {
+            if (usuario.getEmprestimosAtuais() < 0) {
                 usuario.emprestimosAtuais = 0;
             }
         }
@@ -67,27 +70,18 @@ public class TelaEmprestimo extends JFrame {
 
     public TelaEmprestimo(LinkedList<Aluno> alunos, LinkedList<Professor> professores,
             LinkedList<Funcionario> funcionarios, LinkedList<Obra> obras,
-            LinkedList<Emprestimo> emprestimos) {
+            LinkedList<Emprestimo> emprestimos, LinkedList<Penalidade> penalidades) {
 
         this.alunos = alunos;
         this.professores = professores;
         this.funcionarios = funcionarios;
         this.obras = obras;
         this.emprestimos = emprestimos;
-        this.alunos = alunos;
+        this.penalidades = penalidades;
 
-        //teste
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            emprestimos.add(new Emprestimo("1", "Aluno", alunos.get(0), funcionarios.get(0), obras.get(0), 1,
-                    sdf.parse("10/10/2025"), sdf.parse("15/10/2025"), false));
-            emprestimos.add(new Emprestimo("2", "Professor", professores.get(0), funcionarios.get(1), obras.get(1), 2,
-                    sdf.parse("20/10/2025"), sdf.parse("25/10/2025"), false));
-            emprestimos.add(new Emprestimo("3", "Aluno", alunos.get(1), funcionarios.get(1), obras.get(2), 1,
-                    sdf.parse("30/10/2025"), sdf.parse("05/11/2025"), false));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        this.controlePenalidades = new TelaPenalidade(funcionarios, alunos, professores, obras, emprestimos);
+        // Oculta a janela da tela de penalidades, pois usaremos apenas para lógica
+        this.controlePenalidades.setVisible(false);
 
         setTitle("Tela de Empréstimo");
         setSize(400, 300);
@@ -110,18 +104,21 @@ public class TelaEmprestimo extends JFrame {
         JButton btnNovo = new JButton("Novo empréstimo");
         btnNovo.setBounds(50, 100, 280, 40);
         btnNovo.addActionListener(
-                e -> new TelaCadastroEmprestimo(funcionarios, alunos, professores, obras, emprestimos));
+                e -> new TelaCadastroEmprestimo(funcionarios, alunos, professores, obras, emprestimos, penalidades));
         add(btnNovo);
     }
 
     class TelaCadastroEmprestimo extends JFrame {
         LinkedList<Emprestimo> emprestimos;
+        LinkedList<Penalidade> penalidades;
 
         public TelaCadastroEmprestimo(LinkedList<Funcionario> funcionarios, LinkedList<Aluno> alunos,
                 LinkedList<Professor> Professores, LinkedList<Obra> obras,
-                LinkedList<Emprestimo> emprestimos) {
+                LinkedList<Emprestimo> emprestimos, LinkedList<Penalidade> penalidades) {
             this.emprestimos = emprestimos;
-            setSize(380, 430);
+            this.penalidades = penalidades;
+
+            setSize(380, 480);
             setLocationRelativeTo(null);
             setLayout(null);
 
@@ -136,7 +133,7 @@ public class TelaEmprestimo extends JFrame {
             JLabel lblDataEmprestimo = new JLabel("Data Empréstimo (dd/MM/yyyy):");
             lblDataEmprestimo.setBounds(20, 60, 180, 25);
             add(lblDataEmprestimo);
-            JTextField txtDataEmprestimo = new JTextField();
+            JTextField txtDataEmprestimo = new JTextField(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
             txtDataEmprestimo.setBounds(200, 60, 100, 25);
             add(txtDataEmprestimo);
 
@@ -199,7 +196,7 @@ public class TelaEmprestimo extends JFrame {
             add(lblObra);
             JComboBox<String> cbObra = new JComboBox<>();
             for (Obra obra : obras) { // Adiciona as obras da linkedlist ao JComboBox
-                cbObra.addItem(obra.id + " - " + obra.titulo + " - " + obra.autor);
+                cbObra.addItem(obra.getId() + " - " + obra.getTitulo() + " - " + obra.getAutor());
             }
             cbObra.setBounds(80, 260, 180, 25);
             add(cbObra);
@@ -235,6 +232,10 @@ public class TelaEmprestimo extends JFrame {
                 int quantidade;
                 try {
                     quantidade = Integer.parseInt(txtQtd.getText());
+                    if (quantidade <= 0) {
+                        JOptionPane.showMessageDialog(this, "Quantidade deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Quantidade inválida!", "Erro", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -245,15 +246,37 @@ public class TelaEmprestimo extends JFrame {
                 Date dataDevolucao;
                 try {
                     dataEmprestimo = sdf.parse(txtDataEmprestimo.getText());
-                    dataDevolucao = sdf.parse(txtDataDevolucao.getText());
                 } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Formato de data inválido! Use dd/MM/yyyy.", "Erro",
+                    JOptionPane.showMessageDialog(this, "Formato de data inválido para data de empréstimo! Use dd/MM/yyyy.", "Erro",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
+                // Ajusta dataDevolucao conforme prazo padrão se campo vazio
+                if (txtDataDevolucao.getText().trim().isEmpty()) {
+                    int prazoDias = (usuario.getTipo() == TipoUsuario.ALUNO) ? 7 : 10; // Exemplo: 7 dias para aluno, 10 para professor
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dataEmprestimo);
+                    cal.add(Calendar.DAY_OF_MONTH, prazoDias);
+                    dataDevolucao = cal.getTime();
+                } else {
+                    try {
+                        dataDevolucao = sdf.parse(txtDataDevolucao.getText());
+                    } catch (ParseException ex) {
+                        JOptionPane.showMessageDialog(this, "Formato de data inválido para data de devolução! Use dd/MM/yyyy.", "Erro",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+
+                // Valida se dataDevolucao está depois de dataEmprestimo
+                if (!dataDevolucao.after(dataEmprestimo)) {
+                    JOptionPane.showMessageDialog(this, "Data de devolução deve ser posterior à data de empréstimo.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 // Verifica se há exemplares suficientes na obra
-                if (obra.exemplaresDisponiveis < quantidade) {
+                if (obra.getExemplaresDisponiveis() < quantidade) {
                     JOptionPane.showMessageDialog(this, "Não há exemplares suficientes disponíveis.", "Erro",
                             JOptionPane.ERROR_MESSAGE);
                     return;
@@ -265,10 +288,25 @@ public class TelaEmprestimo extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                usuario.emprestar(quantidade);
 
-                // Atualiza os dados
-                obra.exemplaresDisponiveis -= quantidade;
+                // Verifica se o usuário está bloqueado por penalidade ativa
+                if (controlePenalidades.usuarioEstaBloqueado(usuario)) {
+                    JOptionPane.showMessageDialog(this, "Usuário está bloqueado por penalidade ativa e não pode realizar empréstimos.", "Erro",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Verifica se o usuário possui multas ativas (opcional: pode impedir empréstimo)
+                double multaAtiva = controlePenalidades.multaAtivaTotal(usuario);
+                if (multaAtiva > 0) {
+                    JOptionPane.showMessageDialog(this, String.format("Usuário possui multas ativas no valor de R$ %.2f. Regularize antes de realizar novos empréstimos.", multaAtiva), "Aviso",
+                            JOptionPane.WARNING_MESSAGE);
+                    // Pode optar por bloquear ou só alertar, aqui só alertamos
+                }
+
+                // Registra empréstimo
+                usuario.emprestar(quantidade);
+                obra.emprestar(quantidade);
 
                 emprestimos.add(new Emprestimo(id, tipo, usuario, funcionario, obra, quantidade, dataEmprestimo,
                         dataDevolucao, false));

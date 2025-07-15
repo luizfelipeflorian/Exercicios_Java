@@ -2,6 +2,7 @@ package biblioteca;
 
 import javax.swing.*;
 import java.util.LinkedList;
+import java.util.Calendar;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -63,8 +64,9 @@ public class TelaEmprestimo extends JFrame {
             usuario.devolver(quantidade);
 
             if (usuario.getEmprestimosAtuais() < 0) {
-                usuario.emprestimosAtuais = 0;
+                usuario.setEmprestimosAtuais(0);
             }
+
         }
     }
 
@@ -233,7 +235,8 @@ public class TelaEmprestimo extends JFrame {
                 try {
                     quantidade = Integer.parseInt(txtQtd.getText());
                     if (quantidade <= 0) {
-                        JOptionPane.showMessageDialog(this, "Quantidade deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Quantidade deve ser maior que zero.", "Erro",
+                                JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                 } catch (NumberFormatException ex) {
@@ -247,14 +250,16 @@ public class TelaEmprestimo extends JFrame {
                 try {
                     dataEmprestimo = sdf.parse(txtDataEmprestimo.getText());
                 } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Formato de data inválido para data de empréstimo! Use dd/MM/yyyy.", "Erro",
+                    JOptionPane.showMessageDialog(this,
+                            "Formato de data inválido para data de empréstimo! Use dd/MM/yyyy.", "Erro",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 // Ajusta dataDevolucao conforme prazo padrão se campo vazio
                 if (txtDataDevolucao.getText().trim().isEmpty()) {
-                    int prazoDias = (usuario.getTipo() == TipoUsuario.ALUNO) ? 7 : 10; // Exemplo: 7 dias para aluno, 10 para professor
+                    int prazoDias = (usuario.getTipo() == TipoUsuario.ALUNO) ? 7 : 10; // Exemplo: 7 dias para aluno, 10
+                                                                                       // para professor
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(dataEmprestimo);
                     cal.add(Calendar.DAY_OF_MONTH, prazoDias);
@@ -263,7 +268,8 @@ public class TelaEmprestimo extends JFrame {
                     try {
                         dataDevolucao = sdf.parse(txtDataDevolucao.getText());
                     } catch (ParseException ex) {
-                        JOptionPane.showMessageDialog(this, "Formato de data inválido para data de devolução! Use dd/MM/yyyy.", "Erro",
+                        JOptionPane.showMessageDialog(this,
+                                "Formato de data inválido para data de devolução! Use dd/MM/yyyy.", "Erro",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -271,7 +277,8 @@ public class TelaEmprestimo extends JFrame {
 
                 // Valida se dataDevolucao está depois de dataEmprestimo
                 if (!dataDevolucao.after(dataEmprestimo)) {
-                    JOptionPane.showMessageDialog(this, "Data de devolução deve ser posterior à data de empréstimo.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Data de devolução deve ser posterior à data de empréstimo.",
+                            "Erro", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -291,15 +298,19 @@ public class TelaEmprestimo extends JFrame {
 
                 // Verifica se o usuário está bloqueado por penalidade ativa
                 if (controlePenalidades.usuarioEstaBloqueado(usuario)) {
-                    JOptionPane.showMessageDialog(this, "Usuário está bloqueado por penalidade ativa e não pode realizar empréstimos.", "Erro",
+                    JOptionPane.showMessageDialog(this,
+                            "Usuário está bloqueado por penalidade ativa e não pode realizar empréstimos.", "Erro",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // Verifica se o usuário possui multas ativas (opcional: pode impedir empréstimo)
+                // Verifica se o usuário possui multas ativas (opcional: pode impedir
+                // empréstimo)
                 double multaAtiva = controlePenalidades.multaAtivaTotal(usuario);
                 if (multaAtiva > 0) {
-                    JOptionPane.showMessageDialog(this, String.format("Usuário possui multas ativas no valor de R$ %.2f. Regularize antes de realizar novos empréstimos.", multaAtiva), "Aviso",
+                    JOptionPane.showMessageDialog(this, String.format(
+                            "Usuário possui multas ativas no valor de R$ %.2f. Regularize antes de realizar novos empréstimos.",
+                            multaAtiva), "Aviso",
                             JOptionPane.WARNING_MESSAGE);
                     // Pode optar por bloquear ou só alertar, aqui só alertamos
                 }

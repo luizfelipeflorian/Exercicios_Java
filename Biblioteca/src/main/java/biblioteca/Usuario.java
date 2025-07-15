@@ -17,7 +17,7 @@ abstract class Usuario {
     private TipoUsuario tipo;
     private int limiteEmprestimos;
     private int emprestimosAtuais = 0;
-    private boolean ativo = true;  // Indica se o usuário está habilitado para empréstimos
+    private boolean ativo = true; // Indica se o usuário está habilitado para empréstimos
 
     public Usuario(String id, String nome, int limite, TipoUsuario tipo) {
         this.id = id;
@@ -28,7 +28,8 @@ abstract class Usuario {
 
     /**
      * Verifica se o usuário pode realizar um empréstimo de determinada quantidade.
-     * Considera se o usuário está ativo e se não ultrapassa o limite de empréstimos.
+     * Considera se o usuário está ativo e se não ultrapassa o limite de
+     * empréstimos.
      */
     public boolean podeEmprestar(int qtd) {
         return ativo && (emprestimosAtuais + qtd) <= limiteEmprestimos;
@@ -73,6 +74,10 @@ abstract class Usuario {
         return emprestimosAtuais;
     }
 
+    public void setEmprestimosAtuais(int emprestimosAtuais) {
+        this.emprestimosAtuais = Math.max(emprestimosAtuais, 0);
+    }
+
     public boolean isAtivo() {
         return ativo;
     }
@@ -87,7 +92,8 @@ abstract class Usuario {
 
     @Override
     public String toString() {
-        return id + " - " + nome + " | Empréstimos: " + emprestimosAtuais + "/" + limiteEmprestimos + " | Ativo: " + ativo;
+        return id + " - " + nome + " | Empréstimos: " + emprestimosAtuais + "/" + limiteEmprestimos + " | Ativo: "
+                + ativo;
     }
 
     @Override
@@ -193,6 +199,7 @@ class Obra {
 
     /**
      * Tenta emprestar a quantidade solicitada de exemplares.
+     * 
      * @return true se possível, false caso contrário.
      */
     public boolean emprestar(int quantidade) {
@@ -241,7 +248,8 @@ class Obra {
 
     @Override
     public String toString() {
-        return id + " - " + titulo + " - " + autor + " (" + tipo + ")" + " = " + exemplaresDisponiveis + "/" + totalExemplares;
+        return id + " - " + titulo + " - " + autor + " (" + tipo + ")" + " = " + exemplaresDisponiveis + "/"
+                + totalExemplares;
     }
 
     @Override

@@ -12,6 +12,7 @@ public class TelaPrincipal extends JFrame {
     LinkedList<Professor> professores = new LinkedList<>();
     LinkedList<Obra> obras = new LinkedList<>();
     LinkedList<TelaEmprestimo.Emprestimo> emprestimos = new LinkedList<>();
+    LinkedList<Penalidade> penalidades = new LinkedList<>();
 
     private Funcionario usuarioLogado = null; // Para controle simples de acesso
 
@@ -51,14 +52,14 @@ public class TelaPrincipal extends JFrame {
         JButton btnEmprestimos = new JButton("Empréstimos");
         gbc.gridx = 0;
         gbc.gridy = 1;
-        btnEmprestimos.addActionListener(e -> new TelaEmprestimo(alunos, professores, funcionarios, obras, emprestimos));
+        btnEmprestimos.addActionListener(e -> new TelaEmprestimo(alunos, professores, funcionarios, obras, emprestimos, penalidades));
         add(btnEmprestimos, gbc);
 
         // Botão Devoluções
         JButton btnDevolucoes = new JButton("Devoluções");
         gbc.gridx = 1;
         gbc.gridy = 1;
-        btnDevolucoes.addActionListener(e -> new TelaDevolucao(emprestimos));
+        btnDevolucoes.addActionListener(e -> new TelaDevolucao(emprestimos, penalidades));
         add(btnDevolucoes, gbc);
 
         // Botão Relatórios
@@ -147,7 +148,9 @@ public class TelaPrincipal extends JFrame {
      */
     private boolean verificarAcesso() {
         if (usuarioLogado == null) {
-            JOptionPane.showMessageDialog(this, "Acesso negado! Faça login como funcionário para acessar esta funcionalidade.", "Acesso Negado", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Acesso negado! Faça login como funcionário para acessar esta funcionalidade.", "Acesso Negado",
+                    JOptionPane.WARNING_MESSAGE);
             return false;
         }
         return true;

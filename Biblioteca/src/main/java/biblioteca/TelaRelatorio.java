@@ -79,7 +79,7 @@ public class TelaRelatorio extends JFrame {
         JOptionPane.showMessageDialog(this, sb.toString(), "Relatório", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // Relatório 2: Usuários inadimplentes (empréstimos atrasados)
+    // Usuários inadimplentes (empréstimos atrasados)
     private void mostrarUsuariosInadimplentes() {
         Date hoje = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -89,7 +89,7 @@ public class TelaRelatorio extends JFrame {
 
         for (TelaEmprestimo.Emprestimo e : emprestimos) {
             if (!e.isDevolvido() && e.dataDevolucao.before(hoje)) {
-                atrasados.computeIfAbsent(e.usuario, k -> new ArrayList<>()).add(e);
+                atrasados.computeIfAbsent(e.usuario, k -> new ArrayList<>()).add(e); // Adiciona uma nova lista para o usuário caso ele ainda não tenha uma lista de atrasos
             }
         }
 
@@ -113,7 +113,7 @@ public class TelaRelatorio extends JFrame {
         JOptionPane.showMessageDialog(this, sb.toString(), "Relatório", JOptionPane.WARNING_MESSAGE);
     }
 
-    // Relatório 3: Empréstimos por período
+    // Empréstimos por período
     private void mostrarEmprestimosPorPeriodo() {
         String dataInicioStr = JOptionPane.showInputDialog(this, "Informe data inicial (dd/MM/yyyy):");
         String dataFimStr = JOptionPane.showInputDialog(this, "Informe data final (dd/MM/yyyy):");
@@ -147,7 +147,7 @@ public class TelaRelatorio extends JFrame {
         JOptionPane.showMessageDialog(this, sb.toString(), "Relatório", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // Relatório 4: Inventário do acervo
+    // Inventário do acervo
     private void mostrarInventarioAcervo() {
         if (obras.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Nenhuma obra cadastrada.", "Relatório", JOptionPane.INFORMATION_MESSAGE);

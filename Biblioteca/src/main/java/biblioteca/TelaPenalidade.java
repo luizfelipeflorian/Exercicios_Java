@@ -2,13 +2,11 @@ package biblioteca;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 //Classe que representa uma penalidade aplicada a um usuário.
-Class Penalidade {
+class Penalidade {
 
     enum Tipo {
         MULTA, SUSPENSAO
@@ -95,8 +93,8 @@ public class TelaPenalidade extends JFrame {
     private JList<Penalidade> listaPenalidades;
 
     public TelaPenalidade(LinkedList<Funcionario> funcionarios, LinkedList<Aluno> alunos,
-                          LinkedList<Professor> professores, LinkedList<Obra> obras,
-                          LinkedList<TelaEmprestimo.Emprestimo> emprestimos) {
+            LinkedList<Professor> professores, LinkedList<Obra> obras,
+            LinkedList<TelaEmprestimo.Emprestimo> emprestimos) {
         super("Controle de Penalidades");
 
         this.funcionarios = funcionarios;
@@ -142,7 +140,7 @@ public class TelaPenalidade extends JFrame {
 
         // Seleção de usuário
         painel.add(new JLabel("Tipo de Usuário:"));
-        JComboBox<String> cbTipoUsuario = new JComboBox<>(new String[]{"Aluno", "Professor"});
+        JComboBox<String> cbTipoUsuario = new JComboBox<>(new String[] { "Aluno", "Professor" });
         painel.add(cbTipoUsuario);
 
         painel.add(new JLabel("Usuário:"));
@@ -195,7 +193,8 @@ public class TelaPenalidade extends JFrame {
             if (tipo == Penalidade.Tipo.MULTA) {
                 try {
                     valorMulta = Double.parseDouble(txtValorMulta.getText());
-                    if (valorMulta < 0) throw new NumberFormatException();
+                    if (valorMulta < 0)
+                        throw new NumberFormatException();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Valor da multa inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -209,7 +208,8 @@ public class TelaPenalidade extends JFrame {
                 if (!txtDataFim.getText().trim().isEmpty()) {
                     dataFim = sdf.parse(txtDataFim.getText());
                     if (dataFim.before(dataInicio)) {
-                        JOptionPane.showMessageDialog(this, "Data fim não pode ser anterior à data início.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Data fim não pode ser anterior à data início.", "Erro",
+                                JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                 }
@@ -230,11 +230,13 @@ public class TelaPenalidade extends JFrame {
     private void encerrarPenalidadeSelecionada() {
         Penalidade selecionada = listaPenalidades.getSelectedValue();
         if (selecionada == null) {
-            JOptionPane.showMessageDialog(this, "Selecione uma penalidade para encerrar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Selecione uma penalidade para encerrar.", "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
         if (!selecionada.isAtiva()) {
-            JOptionPane.showMessageDialog(this, "Esta penalidade já está encerrada.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Esta penalidade já está encerrada.", "Aviso",
+                    JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         selecionada.encerrar();
@@ -249,7 +251,7 @@ public class TelaPenalidade extends JFrame {
         }
     }
 
-    // Método para verificar se um usuário está bloqueado por penalidade ativa.
+    // Verifica se um usuário está bloqueado por penalidade ativa.
     public boolean usuarioEstaBloqueado(Usuario usuario) {
         for (Penalidade p : penalidades) {
             if (p.getUsuario().equals(usuario) && p.isAtiva() && p.getTipo() == Penalidade.Tipo.SUSPENSAO) {
@@ -259,7 +261,7 @@ public class TelaPenalidade extends JFrame {
         return false;
     }
 
-    // Método para calcular multa total ativa de um usuário.
+    // Calcula multa total ativa de um usuário.
     public double multaAtivaTotal(Usuario usuario) {
         double total = 0;
         for (Penalidade p : penalidades) {

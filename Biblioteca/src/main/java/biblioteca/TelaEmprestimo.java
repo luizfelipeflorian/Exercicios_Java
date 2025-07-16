@@ -82,7 +82,7 @@ public class TelaEmprestimo extends JFrame {
         this.penalidades = penalidades;
 
         this.controlePenalidades = new TelaPenalidade(funcionarios, alunos, professores, obras, emprestimos);
-        // Oculta a janela da tela de penalidades, pois usaremos apenas para lógica
+        // Oculta a janela da tela de penalidades (utiliza apenas para lógica)
         this.controlePenalidades.setVisible(false);
 
         setTitle("Tela de Empréstimo");
@@ -132,6 +132,7 @@ public class TelaEmprestimo extends JFrame {
             txtId.setBounds(80, 20, 180, 25);
             add(txtId);
 
+            // Data de Empréstimo e Devolução
             JLabel lblDataEmprestimo = new JLabel("Data Empréstimo (dd/MM/yyyy):");
             lblDataEmprestimo.setBounds(20, 60, 180, 25);
             add(lblDataEmprestimo);
@@ -258,8 +259,8 @@ public class TelaEmprestimo extends JFrame {
 
                 // Ajusta dataDevolucao conforme prazo padrão se campo vazio
                 if (txtDataDevolucao.getText().trim().isEmpty()) {
-                    int prazoDias = (usuario.getTipo() == TipoUsuario.ALUNO) ? 7 : 10; // Exemplo: 7 dias para aluno, 10
-                                                                                       // para professor
+                    int prazoDias = (usuario.getTipo() == TipoUsuario.ALUNO) ? 7 : 10; // 7 dias para aluno, 10 para
+                                                                                       // professor
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(dataEmprestimo);
                     cal.add(Calendar.DAY_OF_MONTH, prazoDias);
@@ -304,15 +305,12 @@ public class TelaEmprestimo extends JFrame {
                     return;
                 }
 
-                // Verifica se o usuário possui multas ativas (opcional: pode impedir
-                // empréstimo)
+                // Verifica se o usuário possui multas ativas
                 double multaAtiva = controlePenalidades.multaAtivaTotal(usuario);
                 if (multaAtiva > 0) {
                     JOptionPane.showMessageDialog(this, String.format(
                             "Usuário possui multas ativas no valor de R$ %.2f. Regularize antes de realizar novos empréstimos.",
-                            multaAtiva), "Aviso",
-                            JOptionPane.WARNING_MESSAGE);
-                    // Pode optar por bloquear ou só alertar, aqui só alertamos
+                            multaAtiva), "Aviso", JOptionPane.WARNING_MESSAGE);
                 }
 
                 // Registra empréstimo

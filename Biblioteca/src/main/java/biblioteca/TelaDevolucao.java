@@ -3,14 +3,13 @@ package biblioteca;
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 
 import biblioteca.TelaEmprestimo.Emprestimo;
 
 public class TelaDevolucao extends JFrame {
 
     LinkedList<Emprestimo> emprestimos;
-    LinkedList<Penalidade> penalidades; // nova lista para controle de penalidades
+    LinkedList<Penalidade> penalidades; // Nova lista para controle de penalidades
 
     public TelaDevolucao(LinkedList<Emprestimo> emprestimos, LinkedList<Penalidade> penalidades) {
         this.emprestimos = emprestimos;
@@ -119,7 +118,7 @@ public class TelaDevolucao extends JFrame {
                     long diffMillis = hoje.getTime() - emprestimo.dataDevolucao.getTime();
                     long diasAtraso = diffMillis / (1000 * 60 * 60 * 24);
 
-                    double valorMultaDiaria = 2.0; // valor fixo da multa diária, pode ser parametrizado
+                    double valorMultaDiaria = 2.0; // valor fixo da multa diária
                     double multaTotal = diasAtraso * valorMultaDiaria * qtdDevolvida;
 
                     // Cria penalidade de multa
@@ -133,7 +132,7 @@ public class TelaDevolucao extends JFrame {
                             "Multa Aplicada", JOptionPane.WARNING_MESSAGE);
                 }
 
-                // Registrar devolução
+                // Registra devolução
                 emprestimo.registrarDevolucao(qtdDevolvida);
 
                 JOptionPane.showMessageDialog(this, "Devolução registrada com sucesso!");

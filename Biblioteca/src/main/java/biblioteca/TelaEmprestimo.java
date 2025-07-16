@@ -84,7 +84,6 @@ public class TelaEmprestimo extends JFrame {
         this.controlePenalidades = new TelaPenalidade(funcionarios, alunos, professores, obras, emprestimos);
         // Oculta a janela da tela de penalidades (utiliza apenas para lógica)
         this.controlePenalidades.setVisible(false);
-
         setTitle("Tela de Empréstimo");
         setSize(400, 300);
         setLocationRelativeTo(null);
